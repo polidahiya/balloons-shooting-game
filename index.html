@@ -2,8 +2,7 @@
 <html>
   <head>
     <title>Right-Click Event Example</title>
-    <link rel="manifest" href="./index.json">
-
+    <link rel="manifest" href="./index.json" />
   </head>
   <style>
     body {
@@ -16,7 +15,6 @@
     }
     .background {
       position: absolute;
-      z-index: -10;
       background: url(balloonburstbackground.jpg);
       height: 100vh;
       width: 100vw;
@@ -109,7 +107,7 @@
         transform: scale(1) translateY(0px);
       }
     }
-    .notice{
+    .notice {
       position: absolute;
       height: 100px;
       width: auto;
@@ -121,12 +119,9 @@
     <div class="background"></div>
     <div class="scope"></div>
     <div class="score">Score: 00</div>
-    <div class="notice">
-      Press "M" & "N" to change weapon
-    </div>
+    <div class="notice">Press "M" & "N" to change weapon</div>
     <div class="reloadpracticeshow">Ready</div>
     <div class="smoke"></div>
-    
 
     <script>
       let scope = document.querySelector(".scope");
@@ -146,7 +141,7 @@
       let flags = {
         shoot: true,
         score: 0,
-        firesound:shootsound1,
+        firesound: shootsound1,
       };
 
       // adding balloons
@@ -155,42 +150,46 @@
         balloon.classList.add("balloon");
         balloon.style.top = "100vh";
         balloon.style.left =
-          Math.floor(Math.random() * (window.innerWidth - 80)) + "px";
-        balloon.style.filter = "hue-rotate("+Math.floor(
-          Math.random() * 360
-        )+"deg)"
+          Math.floor(Math.random() * (window.innerWidth - 100)) + 50 + "px";
+        balloon.style.filter =
+          "hue-rotate(" + Math.floor(Math.random() * 360) + "deg)";
+          balloon.style.height=30+Math.random()*30+"px"
+        //
+
+        balloon.addEventListener("click", (e) => {
+          if (flags.shoot) {
+            setTimeout(() => {
+              balloon.remove();
+              smoke.style.display = "block";
+              smoke.style.left = e.pageX - 25 + "px";
+              smoke.style.top = e.pageY - 25 + "px";
+              setTimeout(() => {
+                smoke.style.display = "none";
+              }, 300);
+              score.innerText = "Score: " + (flags.score += 100);
+            }, 100);
+          }
+        });
+
+        //
         document.body.appendChild(balloon);
-        setTimeout(()=>{
-          balloon.remove()
-            },12000)
+        setTimeout(() => {
+          balloon.remove();
+        }, 12000);
       }, 3000);
 
-      // removing balloons
-      setInterval(() => {
-        balloons = document.querySelectorAll(".balloon");
-        balloons.forEach((item) => {
-          item.addEventListener("click", (e) => {
-            if (flags.shoot) {
-              setTimeout(() => {
-                item.remove();
-                smoke.style.display = "block";
-                smoke.style.left = e.pageX - 25 + "px";
-                smoke.style.top = e.pageY - 25 + "px";
-                setTimeout(() => {
-                  smoke.style.display = "none";
-                }, 300);
-                score.innerText = "Score: "+(flags.score += 1);
-              }, 100);
-            }
-          });
-        });
-      }, 100);
 
+      // reduce score
+      document.querySelector(".background").addEventListener("click",()=>{
+        if (flags.shoot) {
+          score.innerText = "Score: " + (flags.score -= 100);
+        }
+      })
 
       //scope movement
       document.body.addEventListener("mousemove", (e) => {
-        scope.style.left = e.pageX-150+ "px";
-        scope.style.top = e.pageY-150+ "px";
+        scope.style.left = e.pageX - 150 + "px";
+        scope.style.top = e.pageY - 150 + "px";
       });
       // shoot animation && sound play
       document.body.addEventListener("click", shoot);
@@ -199,7 +198,7 @@
           scope.classList.add("shoot");
           flags.firesound.play();
           reloadpracticeshow.style.background = "red";
-          reloadpracticeshow.innerHTML = "Reloading..."
+          reloadpracticeshow.innerHTML = "Reloading...";
           flags.shoot = false;
           setTimeout(() => {
             scope.classList.remove("shoot");
@@ -209,7 +208,7 @@
           }, 1700);
           setTimeout(() => {
             reloadpracticeshow.style.background = "green";
-            reloadpracticeshow.innerHTML = "Ready"
+            reloadpracticeshow.innerHTML = "Ready";
             flags.shoot = true;
           }, 2500);
         } else {
@@ -217,18 +216,18 @@
         }
       }
       // change weapon
-      document.addEventListener("keydown",(e)=>{
-        if(e.key=="m"){
-          scope.style.backgroundImage="url(scope2.png)";
-          smoke.style.backgroundImage="url(bombfire.gif)";
-          flags.firesound=shootsound2
+      document.addEventListener("keydown", (e) => {
+        if (e.key == "m") {
+          scope.style.backgroundImage = "url(scope2.png)";
+          smoke.style.backgroundImage = "url(bombfire.gif)";
+          flags.firesound = shootsound2;
         }
-        if(e.key=="n"){
-          scope.style.backgroundImage="url(scope1.png)";
-          smoke.style.backgroundImage="url(smoke.gif)";
-          flags.firesound=shootsound1
+        if (e.key == "n") {
+          scope.style.backgroundImage = "url(scope1.png)";
+          smoke.style.backgroundImage = "url(smoke.gif)";
+          flags.firesound = shootsound1;
         }
-      })
+      });
     </script>
   </body>
 </html>
